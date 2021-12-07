@@ -14,20 +14,20 @@ public class Solution {
     private static int[] draw;
 
     public static void main(String[] args) {
+        Solution sol = new Solution();
         File file = new File(Paths.get("src", "input.txt").toString());
 
         fs = new FastScan(file);
-        draw = drawNumbers();
-        part1();
-        fs.close();
+        draw = sol.drawNumbers();
+        System.out.println(sol.part1());
 
         fs.changeFile(file);
-        draw = drawNumbers();
-        part2();
+        draw = sol.drawNumbers();
+        System.out.println(sol.part2());
         fs.close();
     }
 
-    private static int[] drawNumbers() {
+    private int[] drawNumbers() {
         String[] strArray = fs.next().split(",");
         int[] newDraw = new int[strArray.length];
         for (int i = 0; i < strArray.length; i++) {
@@ -41,7 +41,7 @@ public class Solution {
     private static ArrayList<HashSet<Integer>> rows;
     private static ArrayList<HashSet<Integer>> cols;
 
-    private static void part1() {
+    private int part1() {
         count = Integer.MAX_VALUE;
         score = 0;
         rows = new ArrayList<>();
@@ -65,10 +65,10 @@ public class Solution {
                 cols.get(i).clear();
             }
         }
-        System.out.println(count + ", " + score);
+        return score;
     }
 
-    private static void part1Helper() {
+    private void part1Helper() {
         for (int i = 0; i < draw.length; i++) {
             for (HashSet<Integer> currSet: rows) {
                 if (currSet.contains(draw[i])) {
@@ -99,7 +99,7 @@ public class Solution {
         }
     }
 
-    private static void part2() {
+    private int part2() {
         count = -1;
         score = 0;
         rows = new ArrayList<>();
@@ -123,10 +123,10 @@ public class Solution {
                 cols.get(i).clear();
             }
         }
-        System.out.println(count + ", " + score);
+        return score;
     }
 
-    private static void part2Helper() {
+    private void part2Helper() {
         for (int i = 0; i < draw.length; i++) {
             for (HashSet<Integer> currSet: rows) {
                 if (currSet.contains(draw[i])) {
@@ -157,7 +157,7 @@ public class Solution {
         }
     }
 
-    private static int score(ArrayList<HashSet<Integer>> arr) {
+    private int score(ArrayList<HashSet<Integer>> arr) {
         int total = 0;
         for (HashSet<Integer> currSet: arr) {
             for (Integer currInt: currSet) {
@@ -171,7 +171,7 @@ public class Solution {
         private BufferedReader br;
         private StringTokenizer st;
 
-        public FastScan(File file) {
+        private FastScan(File file) {
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -179,7 +179,8 @@ public class Solution {
             }
         }
 
-        public void changeFile(File file) {
+        private void changeFile(File file) {
+            close();
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -187,7 +188,7 @@ public class Solution {
             }
         }
 
-        public String next() {
+        private String next() {
             while (st == null || !st.hasMoreElements()) {
                 try {
                     st = new StringTokenizer(br.readLine());
@@ -198,11 +199,11 @@ public class Solution {
             return st.nextToken();
         }
 
-        public int nextInt() {
+        private int nextInt() {
             return Integer.parseInt(next());
         }
 
-        public void close() {
+        private void close() {
             try {
                 br.close();
             } catch (IOException ex) {

@@ -36,11 +36,9 @@ public class Solution {
 
         fs = new FastScan(file);
         numOfPassports = sol.countPassports();
-        fs.close();
 
         fs.changeFile(file);
         System.out.println(sol.part1());
-        fs.close();
 
         fs.changeFile(file);
         System.out.println(sol.part2());
@@ -147,7 +145,7 @@ public class Solution {
         private BufferedReader br;
         private StringTokenizer st;
 
-        public FastScan(File file) {
+        private FastScan(File file) {
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -155,7 +153,8 @@ public class Solution {
             }
         }
 
-        public void changeFile(File file) {
+        private void changeFile(File file) {
+            close();
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -163,7 +162,7 @@ public class Solution {
             }
         }
 
-        public String next() {
+        private String next() {
             while (st == null || !st.hasMoreElements()) {
                 try {
                     String str = br.readLine();
@@ -178,7 +177,7 @@ public class Solution {
             return st.nextToken();
         }
 
-        public void close() {
+        private void close() {
             try {
                 br.close();
             } catch (IOException ex) {

@@ -11,18 +11,18 @@ public class Solution {
     private static FastScan fs;
 
     public static void main(String[] args) {
+        Solution sol = new Solution();
         File file = new File(Paths.get("src", "input.txt").toString());
 
         fs = new FastScan(file);
-        System.out.println(part1());
-        fs.close();
+        System.out.println(sol.part1());
 
         fs.changeFile(file);
-        System.out.println(part2());
+        System.out.println(sol.part2());
         fs.close();
     }
 
-    private static int part1() {
+    private int part1() {
         int total = 0;
         int pointer = 0;
         String curr;
@@ -37,7 +37,7 @@ public class Solution {
         return total;
     }
 
-    private static long part2() {
+    private long part2() {
         int[] right = {1,3,5,7,1};
         int[] total = new int[5];
         int[] pointer = new int[5];
@@ -68,7 +68,7 @@ public class Solution {
         private BufferedReader br;
         private StringTokenizer st;
 
-        public FastScan(File file) {
+        private FastScan(File file) {
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -76,7 +76,8 @@ public class Solution {
             }
         }
 
-        public void changeFile(File file) {
+        private void changeFile(File file) {
+            close();
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -84,7 +85,7 @@ public class Solution {
             }
         }
 
-        public String next() {
+        private String next() {
             while (st == null || !st.hasMoreElements()) {
                 try {
                     st = new StringTokenizer(br.readLine());
@@ -95,7 +96,7 @@ public class Solution {
             return st.nextToken();
         }
 
-        public void close() {
+        private void close() {
             try {
                 br.close();
             } catch (IOException ex) {

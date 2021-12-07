@@ -37,7 +37,7 @@ public class Solution {
         return total;
     }
 
-    private long part2() {
+    private int part2() {
         int[] arr = new int[1000];
         int total = 0;
         for (int i = 0; i < arr.length; i++) {
@@ -75,7 +75,7 @@ public class Solution {
             }
         }
 
-        public String next() {
+        private String next() {
             while (st == null || !st.hasMoreElements()) {
                 try {
                     st = new StringTokenizer(br.readLine());
@@ -86,11 +86,11 @@ public class Solution {
             return st.nextToken(",");
         }
 
-        public int nextInt() {
+        private int nextInt() {
             return Integer.parseInt(next());
         }
 
-        public void close() {
+        private void close() {
             try {
                 br.close();
             } catch (IOException ex) {

@@ -20,7 +20,6 @@ public class Solution {
 
         fs.changeFile(file);
         System.out.println(sol.part2());
-
         fs.close();
     }
 

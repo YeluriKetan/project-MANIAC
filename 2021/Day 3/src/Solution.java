@@ -13,27 +13,23 @@ public class Solution {
     private static int[] ref = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
 
     public static void main(String[] args) {
+        Solution sol = new Solution();
         File file = new File(Paths.get("src", "input.txt").toString());
 
         fs = new FastScan(file);
-        int ans = part1();
-        fs.close();
+        int ans = sol.part1();
         System.out.println("Part 1 answer: " + ans);
 
-        int a;
         fs.changeFile(file);
-        a = part2a();
-        fs.close();
+        int a = sol.part2a();
 
-        int b;
         fs.changeFile(file);
-        b = part2b();
+        int b = sol.part2b();
         fs.close();
-
         System.out.println("Part 2 answer: " + a * b);
     }
 
-    private static int part1() {
+    private int part1() {
         int currInt;
         int[] count = new int[12];
         for (int i = 0; i < 1000; i++) {
@@ -59,7 +55,7 @@ public class Solution {
         return gamma * epsilon;
     }
 
-    private static int part2a() {
+    private int part2a() {
         HashSet<Integer> mainSet = new HashSet<>();
         HashSet<Integer> sideSet = new HashSet<>();
         for (int i = 0; i < 1000; i++) {
@@ -100,7 +96,7 @@ public class Solution {
         return 0;
     }
 
-    private static int part2b() {
+    private int part2b() {
         HashSet<Integer> mainSet = new HashSet<>();
         HashSet<Integer> sideSet = new HashSet<>();
         for (int i = 0; i < 1000; i++) {
@@ -145,7 +141,7 @@ public class Solution {
         private BufferedReader br;
         private StringTokenizer st;
 
-        public FastScan(File file) {
+        private FastScan(File file) {
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -153,7 +149,8 @@ public class Solution {
             }
         }
 
-        public void changeFile(File file) {
+        private void changeFile(File file) {
+            close();
             try {
                 br = new BufferedReader(new FileReader(file));
             } catch (FileNotFoundException ex) {
@@ -161,7 +158,7 @@ public class Solution {
             }
         }
 
-        public String next() {
+        private String next() {
             while (st == null || !st.hasMoreElements()) {
                 try {
                     st = new StringTokenizer(br.readLine());
@@ -172,11 +169,11 @@ public class Solution {
             return st.nextToken();
         }
 
-        public int nextInt() {
+        private int nextInt() {
             return Integer.parseInt(next(), 2);
         }
 
-        public void close() {
+        private void close() {
             try {
                 br.close();
             } catch (IOException ex) {
