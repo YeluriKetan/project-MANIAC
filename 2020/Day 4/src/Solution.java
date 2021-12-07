@@ -12,9 +12,6 @@ public class Solution {
 
     private static FastScan fs;
     private static HashMap<String, Integer> indexMap;
-    private static int numOfPassports;
-    private static final String blank = "#";
-    private static final String end = "###";
     private static final String birthYear = "byr";
     private static final String issueYear = "iyr";
     private static final String expYear = "eyr";
@@ -31,13 +28,10 @@ public class Solution {
 
     public static void main(String[] args) {
         Solution sol = new Solution();
-        File file = new File(Paths.get("src", "inputModified.txt").toString());
+        File file = new File(Paths.get("src", "input.txt").toString());
         setIndexMap();
 
         fs = new FastScan(file);
-        numOfPassports = sol.countPassports();
-
-        fs.changeFile(file);
         System.out.println(sol.part1());
 
         fs.changeFile(file);
@@ -57,45 +51,50 @@ public class Solution {
         indexMap.put(countryId, 19);
     }
 
-    private int countPassports() {
-        String curr;
-        int count = 0;
-        while (!end.equals(curr = fs.next())) {
-            if (blank.equals(curr)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     private int part1() {
         int total = 0;
-        int currProd;
+        int currProd = 1;
         String currString;
-        for (int i = 0; i < numOfPassports; i++) {
-            currProd = 1;
-            while (!blank.equals(currString = fs.next())) {
-                currProd *= indexMap.get(currString.substring(0, 3));
+        String[] currStringArr;
+        while ((currString = fs.next()) != null) {
+            if (currString.isBlank()) {
+                if (currProd % 510510 == 0) { // 510510 is product of primes from 2 to 17
+                    total++;
+                }
+                currProd = 1;
+                continue;
             }
-            if (currProd % 510510 == 0) { // 510510 is product of primes from 2 to 17
-                total++;
+            currStringArr = currString.split(" ");
+            for (String currField: currStringArr) {
+                currProd *= indexMap.get(currField.substring(0, 3));
             }
+        }
+        if (currProd % 510510 == 0) {
+            total++;
         }
         return total;
     }
 
     private int part2() {
         int total = 0;
-        int currProd;
+        int currProd = 1;
         String currString;
-        for (int i = 0; i < numOfPassports; i++) {
-            currProd = 1;
-            while (!blank.equals(currString = fs.next())) {
-                currProd *= getValidationValue(currString);
+        String[] currStringArr;
+        while ((currString = fs.next()) != null) {
+            if (currString.isBlank()) {
+                if (currProd % 510510 == 0) {
+                    total++;
+                }
+                currProd = 1;
+                continue;
             }
-            if (currProd % 510510 == 0) { // 510510 is product of primes from 2 to 17
-                total++;
+            currStringArr = currString.split(" ");
+            for (String currField: currStringArr) {
+                currProd *= getValidationValue(currField);
             }
+        }
+        if (currProd % 510510 == 0) {
+            total++;
         }
         return total;
     }
@@ -163,18 +162,12 @@ public class Solution {
         }
 
         private String next() {
-            while (st == null || !st.hasMoreElements()) {
-                try {
-                    String str = br.readLine();
-                    if (str.isBlank()) {
-                        str = "#";
-                    }
-                    st = new StringTokenizer(str);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
+            try {
+                return br.readLine();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
-            return st.nextToken();
+            return null;
         }
 
         private void close() {
