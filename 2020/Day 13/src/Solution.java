@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Solution {
@@ -26,17 +25,17 @@ public class Solution {
         fs.close();
     }
 
-    private int part1() {
+    private int part1() { // find the element that is divisible using the least offset from the given timestamp
         int min = Integer.MAX_VALUE;
         int minId = -1;
         int start = fs.nextInt();
         String[] arr = fs.next().split(",");
         int curr;
-        for (int i = 0; i < arr.length; i++) {
-            if (skip.equals(arr[i])) {
+        for (String s : arr) {
+            if (skip.equals(s)) {
                 continue;
             }
-            curr = Integer.parseInt(arr[i]);
+            curr = Integer.parseInt(s);
             if (curr - start % curr < min) {
                 min = curr - start % curr;
                 minId = curr;
@@ -48,27 +47,36 @@ public class Solution {
     private long part2() {
         fs.next(); // skip line 1
         String[] strArr = fs.next().split(",");
-        HashMap<Integer, Integer> map = new HashMap<>();
-        PriorityQueue<Integer> list = new PriorityQueue<>();
+        HashMap<Integer, Integer> map = new HashMap<>(); // add all mappings of id to index
+        ArrayList<Integer> list = new ArrayList<>(); // add all ids
+        int currInt;
         for (int i = 0; i < strArr.length; i++) {
             if (skip.equals(strArr[i])) {
                 continue;
             }
-            list.add(Integer.parseInt(strArr[i]));
-            map.put(, i);
+            currInt = Integer.parseInt(strArr[i]);
+            list.add(currInt);
+            map.put(currInt, i);
         }
-        long interval = list.poll();
-        long curr = interval;
-        int temp, diff;
-        for (int i = list.size(); i > 0; i--) {
-            temp = list.poll();
-            diff = map.get(937) - map.get(temp);
-            while ((curr - diff) % temp != 0) {
-                curr += interval;
+        list.sort(Integer::compareTo); // sort ids
+        int max = list.get(list.size() - 1);
+        long interval = max;
+        // intervals are chosen in such a way that after every interval from curr, the same pattern
+        // we have accumulated occurs again. Start with the biggest element as interval
+        long curr = 0;
+        // curr is the first timestamp from 0 that the accumulated pattern (w.r.t to the max element) occurs.
+        // Start from 0 since all buses start together here
+        int temp, diff; // temp variables
+        for (int i = list.size() - 2; i > -1; i--) {
+            temp = list.get(i); // get current element, go in descending order
+            diff = map.get(max) - map.get(temp); // find the difference in indices
+            while ((curr - diff) % temp != 0) { // check if curr - difference is a multiple of temp
+                curr += interval; // if not move to the next interval
             }
-            interval *= temp;
+            interval *= temp; // update interval to take into account of temp as well
         }
-        return curr;
+        return curr - (map.get(max) - map.get(list.get(0)));
+        // return first timestamp where the first element in the pattern occurs;
     }
 
     private static class FastScan {
