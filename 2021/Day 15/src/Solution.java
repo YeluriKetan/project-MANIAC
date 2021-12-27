@@ -4,9 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Solution {
@@ -196,9 +193,6 @@ public class Solution {
         private int y;
         private int dist = Integer.MAX_VALUE;
         private boolean visited = false;
-
-        private Pair() {
-        }
 
         private Pair(int x, int y) {
             this.x = x;
