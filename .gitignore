@@ -6,3 +6,7 @@
 
 2021/*/*
 !2021/*/src
+
+cmake-build-debug
+.idea
+CMakeLists.txt
