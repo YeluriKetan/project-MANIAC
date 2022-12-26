@@ -4,8 +4,60 @@ using namespace std;
 
 typedef vector<bool> VB;
 
-ifstream input;
-string inputFileName = "../input.txt";
+class Reader {
+
+private:
+    ifstream input;
+    stringstream line;
+
+    void updateLine() {
+        string nextLine;
+        getline(input, nextLine);
+        line = stringstream(nextLine);
+    }
+
+public:
+    Reader(string filename) {
+        input.open(filename);
+    }
+
+    ~Reader() {
+        input.close();
+    }
+
+    template <class T>
+    T getToken() {
+        T curr;
+        if (line >> curr) {
+            return curr;
+        } else {
+            updateLine();
+            return getToken<T>();
+        }
+    }
+
+    bool isNewLine() {
+        if (line.peek() == -1) {
+            return input.peek() == '\n';
+        } else {
+            return false;
+        }
+    }
+
+    bool isEOF() {
+        if (line.peek() == -1) {
+            return input.peek() == EOF;
+        } else {
+            return line.peek() == EOF;
+        }
+    }
+
+    Reader& operator=(Reader reader) {
+        this->input = std::move(reader.input);
+        this->line = std::move(reader.line);
+        return *this;
+    }
+};
 
 int getPriority(char c) {
     if (c <= 'Z') {
@@ -32,38 +84,34 @@ VB andHash(VB a, VB b) {
     return hash;
 }
 
-void part1() {
+void part1(Reader &reader) {
     int total = 0;
-    string line;
-    while (getline(input, line)) {
+    while (!reader.isEOF()) {
+        auto line = reader.getToken<string>();
         auto common = andHash(getHash(line.substr(0, line.size() / 2)),
-                getHash(line.substr(line.size() / 2)));
+                              getHash(line.substr(line.size() / 2)));
         total += find(common.begin(), common.end(), true) - common.begin();
     }
     cout << total << "\n";
 }
 
-void part2() {
+void part2(Reader &reader) {
     int total = 0;
-    string line;
-    while (getline(input, line)) {
-        VB common = getHash(line);
-        getline(input, line);
-        common = andHash(common, getHash(line));
-        getline(input, line);
-        common = andHash(common, getHash(line));
+    while (!reader.isEOF()) {
+        VB common = getHash(reader.getToken<string>());
+        common = andHash(common, getHash(reader.getToken<string>()));
+        common = andHash(common, getHash(reader.getToken<string>()));
         total += find(common.begin(), common.end(), true) - common.begin();
     }
     cout << total << "\n";
 }
 
 int main() {
-    input = ifstream(inputFileName);
-    part1();
-    input.close();
+    string filename = "../input.txt";
+    Reader reader(filename);
+    part1(reader);
 
-    input = ifstream(inputFileName);
-    part2();
-    input.close();
+    reader = Reader(filename);
+    part2(reader);
     return 0;
 }

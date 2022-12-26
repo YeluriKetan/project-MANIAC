@@ -2,6 +2,11 @@
 
 using namespace std;
 
+typedef long long ll;
+typedef pair<int, int> ii;
+typedef vector<int> VI;
+typedef vector<ll> VLL;
+
 class Reader {
 
 private:
@@ -34,6 +39,12 @@ public:
         }
     }
 
+    string getLine() {
+        string nextLine;
+        getline(input, nextLine);
+        return nextLine;
+    }
+
     bool isNewLine() {
         if (line.peek() == -1) {
             return input.peek() == '\n';
@@ -57,50 +68,26 @@ public:
     }
 };
 
-unordered_map<char, int> value = {{'A', 0}, {'B', 1}, {'C', 2}, {'X', 0}, {'Y', 1}, {'Z', 2}};
-
 void part1(Reader &reader) {
-    int opp, self;
-    int score = 0;
+    ll maxTotal = 0, currTotal = 0;
+    VLL totals;
     while (!reader.isEOF()) {
-        opp = value[reader.getToken<char>()], self = value[reader.getToken<char>()];
-        score += self + 1;
-        if (opp == self) {
-            score += 3;
-        } else if (self == (opp + 1) % 3) {
-            score += 6;
+        if (reader.isNewLine()) {
+            maxTotal = max(maxTotal, currTotal);
+            currTotal = reader.getToken<int>();
+        } else {
+            currTotal += reader.getToken<int>();
         }
     }
-    cout << score << "\n";
+    cout << maxTotal << "\n";
 }
 
 void part2(Reader &reader) {
-    int opp, self, out;
-    int score = 0;
-    while (!reader.isEOF()) {
-        opp = value[reader.getToken<char>()], out = value[reader.getToken<char>()];
-        switch (out) {
-            case 0:
-                self = (opp + 2) % 3;
-                break;
-            case 1:
-                self = opp;
-                score += 3;
-                break;
-            case 2:
-                self = (opp + 1) % 3;
-                score += 6;
-                break;
-            default:
-                break;
-        }
-        score += self + 1;
-    }
-    cout << score << "\n";
+
 }
 
 int main() {
-    string filename = "../input.txt";
+    string filename = "../input2.txt";
     Reader reader(filename);
     part1(reader);
 

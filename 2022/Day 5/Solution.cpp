@@ -2,19 +2,75 @@
 
 using namespace std;
 
-typedef pair<int, int> ii;
-typedef long long ll;
+typedef vector<int> VI;
 typedef vector<char> VC;
 typedef vector<VC> VVC;
 
+class Reader {
 
-ifstream input;
-string inputFileName = "../input.txt";
+private:
+    ifstream input;
+    stringstream line;
 
-VVC readStacks() {
+    void updateLine() {
+        string nextLine;
+        getline(input, nextLine);
+        line = stringstream(nextLine);
+    }
+
+public:
+    Reader(string filename) {
+        input.open(filename);
+    }
+
+    ~Reader() {
+        input.close();
+    }
+
+    template <class T>
+    T getToken() {
+        T curr;
+        if (line >> curr) {
+            return curr;
+        } else {
+            updateLine();
+            return getToken<T>();
+        }
+    }
+
+    string getLine() {
+        string nextLine;
+        getline(input, nextLine);
+        return nextLine;
+    }
+
+    bool isNewLine() {
+        if (line.peek() == -1) {
+            return input.peek() == '\n';
+        } else {
+            return false;
+        }
+    }
+
+    bool isEOF() {
+        if (line.peek() == -1) {
+            return input.peek() == EOF;
+        } else {
+            return line.peek() == EOF;
+        }
+    }
+
+    Reader& operator=(Reader reader) {
+        this->input = std::move(reader.input);
+        this->line = std::move(reader.line);
+        return *this;
+    }
+};
+
+VVC readStacks(Reader &reader) {
     VVC stacks;
-    string line;
-    while (getline(input, line)) {
+    while (!reader.isEOF()) {
+        auto line = reader.getLine();
         if (isdigit(line[1])) {
             break;
         }
@@ -33,16 +89,18 @@ VVC readStacks() {
     return stacks;
 }
 
-void part1() {
-    VVC stacks = readStacks();
-    string temp;
-    int q, f, t;
-    while (input.peek() != EOF) {
-        input >> temp >> q >> temp >> f >> temp >> t;
-        f--; t--;
-        for (int i = 0; i < q; ++i) {
-            stacks[t].push_back(stacks[f].back());
-            stacks[f].pop_back();
+void part1(Reader &reader) {
+    VVC stacks = readStacks(reader);
+    VI n(4); // . q f t
+    while (!reader.isEOF()) {
+        for (int i = 1; i < 4; ++i) {
+            reader.getToken<string>();
+            n[i] = reader.getToken<int>();
+        }
+        n[2]--; n[3]--;
+        for (int i = 0; i < n[1]; ++i) {
+            stacks[n[3]].push_back(stacks[n[2]].back());
+            stacks[n[2]].pop_back();
         }
     }
     for (auto currStack: stacks) {
@@ -51,17 +109,19 @@ void part1() {
     cout << "\n";
 }
 
-void part2() {
-    VVC stacks = readStacks();
-    string temp;
-    int q, f, t;
-    while (input.peek() != EOF) {
-        input >> temp >> q >> temp >> f >> temp >> t;
-        f--; t--;
-        for (int i = stacks[f].size() - q; i < stacks[f].size(); ++i) {
-            stacks[t].push_back(stacks[f][i]);
+void part2(Reader &reader) {
+    VVC stacks = readStacks(reader);
+    VI n(4); // . q f t
+    while (!reader.isEOF()) {
+        for (int i = 1; i < 4; ++i) {
+            reader.getToken<string>();
+            n[i] = reader.getToken<int>();
         }
-        stacks[f].erase(stacks[f].end() - q, stacks[f].end());
+        n[2]--; n[3]--;
+        for (int i = stacks[n[2]].size() - n[1]; i < stacks[n[2]].size(); ++i) {
+            stacks[n[3]].push_back(stacks[n[2]][i]);
+        }
+        stacks[n[2]].erase(stacks[n[2]].end() - n[1], stacks[n[2]].end());
     }
     for (auto currStack: stacks) {
         cout << currStack.back();
@@ -70,12 +130,11 @@ void part2() {
 }
 
 int main() {
-    input = ifstream(inputFileName);
-    part1();
-    input.close();
+    string filename = "../input.txt";
+    Reader reader(filename);
+    part1(reader);
 
-    input = ifstream(inputFileName);
-    part2();
-    input.close();
+    reader = Reader(filename);
+    part2(reader);
     return 0;
 }
