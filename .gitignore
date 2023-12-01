@@ -1,11 +1,16 @@
-2019/*/*
-!2019/*/src
+# ignore all
+*/*/*
 
-2020/*/*
-!2020/*/src
+# Java solutions
+# 20XX/Day X/src/.java
+# 20XX/Day X/src/input.txt
+!*/*/src
 
-2021/*/*
-!2021/*/src
+# cpp solutions
+# 20XX/Day X/XXX.cpp
+# 20XX/Day X/input.txt
+!*/*/*.cpp
+!*/*/input.txt
 
 cmake-build-debug
 .idea
